@@ -2,7 +2,19 @@ import { useState } from 'react'
 import './Dex.css'
 
 function Dashboard() {
-
+  return (
+    <div className='dashboard'>
+      <h1>나만의 포켓몬</h1>
+      <div className='pokemon-slot-wrapper'>
+        <div className='pokemon-slot'></div>
+        <div className='pokemon-slot'></div>
+        <div className='pokemon-slot'></div>
+        <div className='pokemon-slot'></div>
+        <div className='pokemon-slot'></div>
+        <div className='pokemon-slot'></div>
+      </div>
+    </div>
+  ) 
 }
 
 function PokemonList() {
@@ -24,8 +36,14 @@ function PokemonList() {
   );
 }
 
-function PokemonCard(props) {
-  
+function PokemonCard({ pokemon }) {
+  return (
+    <div className='pokemon-car'>
+      <div>{pokemon.no}</div>
+      <div>{pokemon.name}</div>
+      <div>{pokemon.image}</div>
+    </div>
+  )
 }
 
 function Dex() {
