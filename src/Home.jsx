@@ -1,33 +1,59 @@
-import { useState } from 'react'
+// import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import './Home.css'
-import imageSrc from './assets/1.png'
+import styled from "styled-components"
 
-function Img() {
+import imageSrc from './assets/logo.png'
 
-  return <img src={imageSrc} alt="pokemon-logo" className='logo-img'/>;
+function BannerImg() {
+  const BannerLogoStyle = styled.img`
+    width: 400px;
+    height: auto;
+    display: block;
+`;
+
+  return <BannerLogoStyle alt='pokemon-logo' src={imageSrc}></BannerLogoStyle>
 }
 
-function Btn() {
+function BannerBtn() {
+  const BannerBtnStyle = styled.button`
+    border-radius: 4px;
+    background-color: #ca040e;
+    color: white;
+    border: 0;
+    font-weight: 100;
+    padding: 8px 15px 8px 15px;
+
+    &:hover {
+      background-color: #ca040edd;
+      cursor: pointer;  
+    }
+`;
+
   const text = '포켓몬도감 시작하기';
   const navigate = useNavigate();
 
   const onClickHandler = () => {
-    // TODO: LINK로 Dex.jsx로 가도록 구현
     navigate('/dex');
   }
 
-  return <button onClick={onClickHandler} className='start-button'>{text}</button>;
+  return <BannerBtnStyle onClick={onClickHandler}>{text}</BannerBtnStyle>;
 }
 
 function Home() {
+  const BannerWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+`;
 
   return (
     <>
-    <div className='banner-cover'>
-        <Img />
-        <Btn />
-    </div>
+    <BannerWrapper>
+      <BannerImg />
+      <BannerBtn />
+    </BannerWrapper>
     </>
   )
 }
