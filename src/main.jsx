@@ -1,16 +1,20 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './index.css'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+
+import GlobalStyle from "./GlobalStyle";
 import Home from './Home.jsx'
 import Dex from './Dex.jsx'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import Detail from './Detail.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    <GlobalStyle/>
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/dex' element={<Dex />} />
+        <Route path='/detail' element={<Detail />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,

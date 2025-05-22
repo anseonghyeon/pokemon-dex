@@ -1,9 +1,23 @@
 import { useState } from 'react'
 import styled from "styled-components"
-import './Dex.css'
+import { useNavigate } from 'react-router-dom'
+
 import imageSrc from './assets/pokeball.png'
+import MOCK_DATA from './mock'
 
+const PokemonCardButtonStyle = styled.button`
+  color: white;
+  background-color: #3559a1;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  border: 0;
 
+  &:hover {
+      background-color: #4569b1;
+      cursor: pointer;  
+    }
+`
 const PokemonCardDefaultStyle = styled.img`
     width: 100px;
     height: 100px;
@@ -14,23 +28,86 @@ const PokemonCardDefaultStyle = styled.img`
 const PokemonCardListStyle = styled.div`
     width: 200px;
     height: 300px;
-    background-color: white;
     border-radius: 10px;
     box-shadow: 1px 1px 6px gray;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background-color: ${props => {
+      const type = {'노말': '#949492', '불꽃': '#e56c40', '물': '#5384c5', '풀': '#66a93e', '전기': '#fab813', '얼음': '#66cbe8', '격투': '#df9c3f', '독': '#745198', '땅': '#9b7743',
+        '비행': '#a2c3e7', '에스퍼': '#db6c7b', '벌레': '#9fa245', '바위': '#bfb886', '고스트': '#67486f', '드래곤': '#535da8', '악': '#4f4848', '강철': '#67aac6', '페어리': '#ccb2c7'
+      }
+
+      if(props.color !== null) {
+        return type[props.color];
+      } else {
+        return 'white';
+      }
+      
+    }};
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 1px 1px 6px #000000aa;
+      cursor: pointer;  
+    }
 `;
 
 const PokemonCardDashboardStyle = styled.div`
     width: 100px;
     height: 150px;
-    background-color: white;
     border-radius: 10px;
     box-shadow: 1px 1px 6px gray;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background-color: ${props => {
+      const type = {'노말': '#949492', '불꽃': '#e56c40', '물': '#5384c5', '풀': '#66a93e', '전기': '#fab813', '얼음': '#66cbe8', '격투': '#df9c3f', '독': '#745198', '땅': '#9b7743',
+        '비행': '#a2c3e7', '에스퍼': '#db6c7b', '벌레': '#9fa245', '바위': '#bfb886', '고스트': '#67486f', '드래곤': '#535da8', '악': '#4f4848', '강철': '#67aac6', '페어리': '#ccb2c7'
+      }
+
+      if(props.color !== null) {
+        return type[props.color];
+      } else {
+        return 'white';
+      }
+      
+    }};
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 1px 1px 6px #000000aa;
+      cursor: pointer;  
+    }
+`;
+
+const PokemonCardImgStyle = styled.img`
+  width: 80px;
+  height: 80px;
+`;
+
+const PokemonCardNameStyle = styled.div`
+  font-weight: bold;  
+`;
+
+const PokemonCardIdStyle = styled.div`
+  color: gray;
 `;
 
 function PokemonCard({ pokemon, setMyPokemon, action, index }) {
-  const handleAddClick = () => {
+  const navigate = useNavigate();
+
+  const onClickHandler = () => {
+    navigate('/detail', { state: {pokemon}});
+  }
+  const handleAddClick = (e) => {
+    e.stopPropagation();
     setMyPokemon(prev => {
-      const exists = prev.some(p => p?.no === pokemon.no);
+      const exists = prev.some(p => p?.id === pokemon.id);
       if (exists) {
         alert('이미 선택된 포켓몬입니다.');
         return prev;
@@ -48,7 +125,8 @@ function PokemonCard({ pokemon, setMyPokemon, action, index }) {
     });
   };
 
-  const handleDeleteClick = () => {
+  const handleDeleteClick = (e) => {
+    e.stopPropagation();
     setMyPokemon(prev => {
       const newList = [...prev];
       newList[index] = null;
@@ -64,20 +142,20 @@ function PokemonCard({ pokemon, setMyPokemon, action, index }) {
   }
   if(action === 'PokemonList') {
     return (
-      <PokemonCardListStyle>
-        <div>{pokemon.no}</div>
-        <div>{pokemon.name}</div>
-        <div>{pokemon.image}</div>
-        <button onClick={handleAddClick}>추가</button>
+      <PokemonCardListStyle color={pokemon.types[0]} onClick={onClickHandler}>
+        <PokemonCardImgStyle src={pokemon.img_url} alt={pokemon.korean_name}></PokemonCardImgStyle>
+        <PokemonCardNameStyle>{pokemon.korean_name}</PokemonCardNameStyle>
+        <PokemonCardIdStyle>{`No. ${String(pokemon.id).padStart(3, '0')}`}</PokemonCardIdStyle>
+        <PokemonCardButtonStyle onClick={handleAddClick}>추가</PokemonCardButtonStyle>
       </PokemonCardListStyle>
     )
   } else if(action ==='Dashboard') {
     return (
-      <PokemonCardDashboardStyle>
-        <div>{pokemon.no}</div>
-        <div>{pokemon.name}</div>
-        <div>{pokemon.image}</div>
-        <button onClick={handleDeleteClick}>삭제</button>
+      <PokemonCardDashboardStyle color={pokemon.types[0]} onClick={onClickHandler}>
+        <PokemonCardImgStyle src={pokemon.img_url} alt={pokemon.korean_name}></PokemonCardImgStyle>
+        <PokemonCardNameStyle>{pokemon.korean_name}</PokemonCardNameStyle>
+        <PokemonCardIdStyle>{`No. ${String(pokemon.id).padStart(3, '0')}`}</PokemonCardIdStyle>
+        <PokemonCardButtonStyle onClick={handleDeleteClick}>삭제</PokemonCardButtonStyle>
       </PokemonCardDashboardStyle>
     )
   } 
@@ -85,27 +163,29 @@ function PokemonCard({ pokemon, setMyPokemon, action, index }) {
   return null;
 }
 
-
-
 const DashBoardHeaderStyle = styled.h1`
-    color: red;
-    font-weight: 500;
+    color: #3559a1;
+    font-weight: bolder;
     font-size: 25px;
     text-align: center;
+    padding-bottom: 15px;
 `;
 
 const PokemonSlotWrapper = styled.div`
     display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     gap: 80px;
-    background-color: black;
 `;
 
 const PokemonSlot = styled.div`
     width: 100px;
-    height: cover;
+    height: fit-content;
     background-color: white;
     border-radius: 10px;
     border: 1px dashed gray;
+
 `;
 
 const DashBoardStyle = styled.div`
@@ -115,9 +195,7 @@ const DashBoardStyle = styled.div`
 `;
 
 function Dashboard({ myPokemon, setMyPokemon }) {
-  
-
-  const headerName = '나만의 포켓몬';
+  const headerName = 'Pokemon Dex';
 
   return (
     <DashBoardStyle>
@@ -139,19 +217,22 @@ const PokemonListStyle = styled.div`
     padding: 30px;
     margin-top: 20px;
     display: flex;
+    flex-wrap: wrap;
     gap: 20px;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    
 `;
 
 function PokemonList({ allPokemon, setMyPokemon }) {
   
-
   return (
     <PokemonListStyle>
       {allPokemon.map((pokemon) => {
-        return <PokemonCard pokemon={pokemon} setMyPokemon={setMyPokemon} action={'PokemonList'}/>;
+        return <PokemonCard key={pokemon.id} pokemon={pokemon} setMyPokemon={setMyPokemon} action={'PokemonList'}/>;
       })}
     </PokemonListStyle>
-
   );
 }
 
@@ -159,15 +240,7 @@ function Dex() {
   // 내가 가진 포켓몬
   const [myPokemon, setMyPokemon] = useState([null, null, null, null ,null, null]);
 
-  // Mock up 포켓몬 리스트
-  const allPokemon = [
-    { image: '이상해씨 이미지', name: '이상해씨', no: '001' },
-    { image: '이상해풀 이미지', name: '이상해풀', no: '002' },
-    { image: '이상해꽃 이미지', name: '이상해꽃', no: '003' },
-    { image: '파이리 이미지', name: '파이리', no: '004' },
-    { image: '리자드 이미지', name: '리자드', no: '005' },
-    { image: '리자몽 이미지', name: '리자몽', no: '006' },
-  ]
+  const allPokemon = MOCK_DATA;
 
   return (
     <>
