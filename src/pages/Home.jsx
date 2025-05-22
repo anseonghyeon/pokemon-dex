@@ -1,7 +1,15 @@
-import { useNavigate } from 'react-router-dom'
 import styled from "styled-components"
+import { useNavigate } from 'react-router-dom'
 
-import imageSrc from './assets/logo.png'
+import logoImage from '../assets/logo.png'
+
+const BannerWrapperStyle = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+`;
 
 const BannerLogoStyle = styled.img`
     width: 400px;
@@ -9,22 +17,16 @@ const BannerLogoStyle = styled.img`
     display: block;
 `;
 
-function BannerImg() {
-
-  return <BannerLogoStyle alt='pokemon-logo' src={imageSrc}></BannerLogoStyle>
-}
-
 const BannerBtnStyle = styled.button`
     border-radius: 4px;
-    background-color: #ca040e;
+    background-color: #3559a1;
     color: white;
-    border: 0;
-    font-weight: 100;
+    border: 0; 
+    font-weight: 400;
     padding: 8px 15px 8px 15px;
     
-
     &:hover {
-      background-color: #ca040edd;
+      background-color: #3559a1dd;
       cursor: pointer;  
     }
 `;
@@ -40,26 +42,16 @@ function BannerBtn() {
   return <BannerBtnStyle onClick={onClickHandler}>{content}</BannerBtnStyle>;
 }
 
-const BannerWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    
-`;
-
 function Home() {
 
   return (
     <>
-      <BannerWrapper>
-        <BannerImg />
+      <BannerWrapperStyle>
+        <BannerLogoStyle alt='pokemon-logo' src={logoImage} />
         <BannerBtn />
-      </BannerWrapper>
+      </BannerWrapperStyle>
     </>
-    
-  )
+  );
 }
 
 export default Home

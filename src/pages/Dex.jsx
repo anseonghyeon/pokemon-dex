@@ -2,8 +2,8 @@ import { useState } from 'react'
 import styled from "styled-components"
 import { useNavigate } from 'react-router-dom'
 
-import imageSrc from './assets/pokeball.png'
-import MOCK_DATA from './mock'
+import pokeballImage from '../assets/pokeball.png'
+import MOCK_DATA from '../data/mock'
 
 const PokemonCardButtonStyle = styled.button`
   color: white;
@@ -17,7 +17,8 @@ const PokemonCardButtonStyle = styled.button`
       background-color: #4569b1;
       cursor: pointer;  
     }
-`
+`;
+
 const PokemonCardDefaultStyle = styled.img`
     width: 100px;
     height: 100px;
@@ -98,12 +99,57 @@ const PokemonCardIdStyle = styled.div`
   color: gray;
 `;
 
+const DashBoardHeaderStyle = styled.h1`
+    color: #3559a1;
+    font-weight: bolder;
+    font-size: 25px;
+    text-align: center;
+    padding-bottom: 15px;
+`;
+
+const PokemonSlotWrapper = styled.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 80px;
+`;
+
+const PokemonSlot = styled.div`
+    width: 100px;
+    height: fit-content;
+    background-color: white;
+    border-radius: 10px;
+    border: 1px dashed gray;
+
+`;
+
+const DashBoardStyle = styled.div`
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    padding: 30px;
+`;
+
+const PokemonListStyle = styled.div`
+    background-color: #f7f7f7;
+    border-radius: 10px;
+    padding: 30px;
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+`;
+
 function PokemonCard({ pokemon, setMyPokemon, action, index }) {
   const navigate = useNavigate();
 
   const onClickHandler = () => {
     navigate('/detail', { state: {pokemon}});
   }
+
   const handleAddClick = (e) => {
     e.stopPropagation();
     setMyPokemon(prev => {
@@ -136,20 +182,11 @@ function PokemonCard({ pokemon, setMyPokemon, action, index }) {
 
   if(pokemon === null) {
     return (
-      <PokemonCardDefaultStyle alt='pokemon-ball' src={imageSrc}></PokemonCardDefaultStyle>
+      <PokemonCardDefaultStyle alt='pokemon-ball' src={pokeballImage}></PokemonCardDefaultStyle>
     );
-    
   }
-  if(action === 'PokemonList') {
-    return (
-      <PokemonCardListStyle color={pokemon.types[0]} onClick={onClickHandler}>
-        <PokemonCardImgStyle src={pokemon.img_url} alt={pokemon.korean_name}></PokemonCardImgStyle>
-        <PokemonCardNameStyle>{pokemon.korean_name}</PokemonCardNameStyle>
-        <PokemonCardIdStyle>{`No. ${String(pokemon.id).padStart(3, '0')}`}</PokemonCardIdStyle>
-        <PokemonCardButtonStyle onClick={handleAddClick}>추가</PokemonCardButtonStyle>
-      </PokemonCardListStyle>
-    )
-  } else if(action ==='Dashboard') {
+
+  if(action === 'Dashboard') {
     return (
       <PokemonCardDashboardStyle color={pokemon.types[0]} onClick={onClickHandler}>
         <PokemonCardImgStyle src={pokemon.img_url} alt={pokemon.korean_name}></PokemonCardImgStyle>
@@ -158,41 +195,19 @@ function PokemonCard({ pokemon, setMyPokemon, action, index }) {
         <PokemonCardButtonStyle onClick={handleDeleteClick}>삭제</PokemonCardButtonStyle>
       </PokemonCardDashboardStyle>
     )
+  } else if(action ==='PokemonList') {
+    return (
+      <PokemonCardListStyle color={pokemon.types[0]} onClick={onClickHandler}>
+        <PokemonCardImgStyle src={pokemon.img_url} alt={pokemon.korean_name}></PokemonCardImgStyle>
+        <PokemonCardNameStyle>{pokemon.korean_name}</PokemonCardNameStyle>
+        <PokemonCardIdStyle>{`No. ${String(pokemon.id).padStart(3, '0')}`}</PokemonCardIdStyle>
+        <PokemonCardButtonStyle onClick={handleAddClick}>추가</PokemonCardButtonStyle>
+      </PokemonCardListStyle>
+    )
   } 
 
   return null;
 }
-
-const DashBoardHeaderStyle = styled.h1`
-    color: #3559a1;
-    font-weight: bolder;
-    font-size: 25px;
-    text-align: center;
-    padding-bottom: 15px;
-`;
-
-const PokemonSlotWrapper = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 80px;
-`;
-
-const PokemonSlot = styled.div`
-    width: 100px;
-    height: fit-content;
-    background-color: white;
-    border-radius: 10px;
-    border: 1px dashed gray;
-
-`;
-
-const DashBoardStyle = styled.div`
-    background-color: #f7f7f7;
-    border-radius: 10px;
-    padding: 30px;
-`;
 
 function Dashboard({ myPokemon, setMyPokemon }) {
   const headerName = 'Pokemon Dex';
@@ -211,20 +226,6 @@ function Dashboard({ myPokemon, setMyPokemon }) {
   );
 }
 
-const PokemonListStyle = styled.div`
-    background-color: #f7f7f7;
-    border-radius: 10px;
-    padding: 30px;
-    margin-top: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
-    margin-left: auto;
-    margin-right: auto;
-    
-`;
-
 function PokemonList({ allPokemon, setMyPokemon }) {
   
   return (
@@ -237,17 +238,15 @@ function PokemonList({ allPokemon, setMyPokemon }) {
 }
 
 function Dex() {
-  // 내가 가진 포켓몬
-  const [myPokemon, setMyPokemon] = useState([null, null, null, null ,null, null]);
-
   const allPokemon = MOCK_DATA;
+  const [myPokemon, setMyPokemon] = useState([null, null, null, null ,null, null]);
 
   return (
     <>
       <Dashboard myPokemon={myPokemon} setMyPokemon={setMyPokemon} />
       <PokemonList allPokemon={allPokemon} setMyPokemon={setMyPokemon} />
     </>
-  )
+  );
 }
 
 export default Dex

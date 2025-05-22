@@ -1,6 +1,6 @@
 import React from 'react';
-import {useLocation, useNavigate} from 'react-router-dom';
 import styled from "styled-components"
+import {useLocation, useNavigate} from 'react-router-dom';
 
 const DetailWrapperStyle = styled.div`
   display: flex;
@@ -8,6 +8,7 @@ const DetailWrapperStyle = styled.div`
   align-items: center;
   justify-content: center;  
   height: 100vh;
+  border-radius: 5px;
   background-color: ${props => {
       const type = {'노말': '#949492', '불꽃': '#e56c40', '물': '#5384c5', '풀': '#66a93e', '전기': '#fab813', '얼음': '#66cbe8', '격투': '#df9c3f', '독': '#745198', '땅': '#9b7743',
         '비행': '#a2c3e7', '에스퍼': '#db6c7b', '벌레': '#9fa245', '바위': '#bfb886', '고스트': '#67486f', '드래곤': '#535da8', '악': '#4f4848', '강철': '#67aac6', '페어리': '#ccb2c7'
@@ -26,15 +27,15 @@ const DetailImgStyle = styled.img`
   display: block;
   width: 200px;
   height: auto;
-`
+`;
 
 const DetailNameStyle = styled.h1`
   color: #3559a1;
-`
+`;
 
 const DetailTypeStyle = styled.div`
   font-weight: bold;
-`
+`;
 
 const DetailDescStyle = styled.div`
   font-weight: bold;
@@ -53,7 +54,7 @@ const DetailBackButtonStyle = styled.button`
       background-color: #4569b1;
       cursor: pointer;  
     }
-`
+`;
 
 function Detail() {
   const location = useLocation();
@@ -71,7 +72,7 @@ function Detail() {
       <DetailWrapperStyle color={pokemon.types[0]}>
         <DetailImgStyle src={pokemon?.img_url}></DetailImgStyle>
         <DetailNameStyle>{pokemon.korean_name}</DetailNameStyle>
-        <DetailTypeStyle>`타입 : ${pokemon.types.join(' / ')}`</DetailTypeStyle>
+        <DetailTypeStyle>타입 : {pokemon.types.join(' / ')}</DetailTypeStyle>
         <DetailDescStyle>{pokemon.description}</DetailDescStyle>
         <DetailBackButtonStyle onClick={onClickHandler}>{buttonText}</DetailBackButtonStyle>
       </DetailWrapperStyle>

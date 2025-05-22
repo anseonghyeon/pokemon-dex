@@ -1,7 +1,6 @@
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
-
     * {
         margin: 0;
         padding: 0;
@@ -9,8 +8,8 @@ const GlobalStyle = createGlobalStyle`
     }
 
     body {
-    background-color: #ffcc06;
-    padding: 15px;
+        background-color: #ffcc06;
+        padding: 15px;
     }
 `;
 
