@@ -57,14 +57,16 @@ const DetailBackButtonStyle = styled.button`
 `;
 
 function Detail() {
-  const location = useLocation();
-  const { pokemon } = (location.state !== null) ? location.state : null;
   const buttonText = '뒤로가기';
 
+  // style 설정만하는데 props를 쓰니 그리고 depth도 1depth임 그냥 location으로 받아온거 쓰자
+  const location = useLocation();
+  const { pokemon } = (location.state !== null) ? location.state : null;
+  
   const navigate = useNavigate();
 
   const onClickHandler = () => {
-    navigate('/dex', { state: {pokemon}});
+    navigate('/dex', { state: { pokemon: data.pokemon }});
   }
 
   return (

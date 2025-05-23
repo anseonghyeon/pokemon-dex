@@ -1,9 +1,11 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import styled from "styled-components"
 import { useNavigate } from 'react-router-dom'
 
 import pokeballImage from '../assets/pokeball.png'
 import MOCK_DATA from '../data/mock'
+
+import { Context } from '../Context.js'
 
 const PokemonCardButtonStyle = styled.button`
   color: white;
@@ -143,17 +145,18 @@ const PokemonListStyle = styled.div`
     margin-right: auto;
 `;
 
-function PokemonCard({ pokemon, setMyPokemon, action, index }) {
+function PokemonCard() {
   const navigate = useNavigate();
+  const data = useContext(Context);
 
   const onClickHandler = () => {
-    navigate('/detail', { state: {pokemon}});
+    navigate('/detail', { state: { pokemon: data.pokemon}}); 
   }
 
   const handleAddClick = (e) => {
     e.stopPropagation();
-    setMyPokemon(prev => {
-      const exists = prev.some(p => p?.id === pokemon.id);
+    data.setMyPokemon(prev => {
+      const exists = prev.some(p => p?.id === data.pokemon.id);
       if (exists) {
         alert('이미 선택된 포켓몬입니다.');
         return prev;
@@ -166,41 +169,41 @@ function PokemonCard({ pokemon, setMyPokemon, action, index }) {
       }
   
       const newList = [...prev];
-      newList[emptyIndex] = pokemon;
+      newList[emptyIndex] = data.pokemon;
       return newList;
     });
   };
 
   const handleDeleteClick = (e) => {
     e.stopPropagation();
-    setMyPokemon(prev => {
+    data.setMyPokemon(prev => {
       const newList = [...prev];
-      newList[index] = null;
+      newList[data.index] = null;
       return newList;
     });
   };
 
-  if(pokemon === null) {
+  if(data.pokemon === null) {
     return (
       <PokemonCardDefaultStyle alt='pokemon-ball' src={pokeballImage}></PokemonCardDefaultStyle>
     );
   }
 
-  if(action === 'Dashboard') {
+  if(data.action === 'Dashboard') {
     return (
-      <PokemonCardDashboardStyle color={pokemon.types[0]} onClick={onClickHandler}>
-        <PokemonCardImgStyle src={pokemon.img_url} alt={pokemon.korean_name}></PokemonCardImgStyle>
-        <PokemonCardNameStyle>{pokemon.korean_name}</PokemonCardNameStyle>
-        <PokemonCardIdStyle>{`No. ${String(pokemon.id).padStart(3, '0')}`}</PokemonCardIdStyle>
+      <PokemonCardDashboardStyle color={data.pokemon.types[0]} onClick={onClickHandler}>
+        <PokemonCardImgStyle src={data.pokemon.img_url} alt={data.pokemon.korean_name}></PokemonCardImgStyle>
+        <PokemonCardNameStyle>{data.pokemon.korean_name}</PokemonCardNameStyle>
+        <PokemonCardIdStyle>{`No. ${String(data.pokemon.id).padStart(3, '0')}`}</PokemonCardIdStyle>
         <PokemonCardButtonStyle onClick={handleDeleteClick}>삭제</PokemonCardButtonStyle>
       </PokemonCardDashboardStyle>
     )
-  } else if(action ==='PokemonList') {
+  } else if(data.action ==='PokemonList') {
     return (
-      <PokemonCardListStyle color={pokemon.types[0]} onClick={onClickHandler}>
-        <PokemonCardImgStyle src={pokemon.img_url} alt={pokemon.korean_name}></PokemonCardImgStyle>
-        <PokemonCardNameStyle>{pokemon.korean_name}</PokemonCardNameStyle>
-        <PokemonCardIdStyle>{`No. ${String(pokemon.id).padStart(3, '0')}`}</PokemonCardIdStyle>
+      <PokemonCardListStyle color={data.pokemon.types[0]} onClick={onClickHandler}>
+        <PokemonCardImgStyle src={data.pokemon.img_url} alt={data.pokemon.korean_name}></PokemonCardImgStyle>
+        <PokemonCardNameStyle>{data.pokemon.korean_name}</PokemonCardNameStyle>
+        <PokemonCardIdStyle>{`No. ${String(data.pokemon.id).padStart(3, '0')}`}</PokemonCardIdStyle>
         <PokemonCardButtonStyle onClick={handleAddClick}>추가</PokemonCardButtonStyle>
       </PokemonCardListStyle>
     )
@@ -209,30 +212,36 @@ function PokemonCard({ pokemon, setMyPokemon, action, index }) {
   return null;
 }
 
-function Dashboard({ myPokemon, setMyPokemon }) {
+function Dashboard() {
   const headerName = 'Pokemon Dex';
+  const data = useContext(Context);
 
   return (
     <DashBoardStyle>
       <DashBoardHeaderStyle>{headerName}</DashBoardHeaderStyle>
       <PokemonSlotWrapper>
-        {myPokemon.map((pokemon, idx) => (
-          <PokemonSlot key={idx}>
-            <PokemonCard pokemon={pokemon} setMyPokemon={setMyPokemon} action={'Dashboard'} index={idx}></PokemonCard>
-          </PokemonSlot>
+        {data.myPokemon.map((pokemon, idx) => (
+          <Context.Provider key={idx} value={{ pokemon, setMyPokemon: data.setMyPokemon, action: 'Dashboard', index: idx}}>
+            <PokemonSlot>
+              <PokemonCard></PokemonCard>
+            </PokemonSlot>
+          </Context.Provider>
         ))}
       </PokemonSlotWrapper>
     </DashBoardStyle>
   );
 }
 
-function PokemonList({ allPokemon, setMyPokemon }) {
-  
+function PokemonList() {
+  const data = useContext(Context);
+
   return (
     <PokemonListStyle>
-      {allPokemon.map((pokemon) => {
-        return <PokemonCard key={pokemon.id} pokemon={pokemon} setMyPokemon={setMyPokemon} action={'PokemonList'}/>;
-      })}
+      {data.allPokemon.map((pokemon, idx) => (
+        <Context.Provider key={idx} value={{ pokemon, setMyPokemon: data.setMyPokemon, action: 'PokemonList'}}>
+          <PokemonCard/>
+        </Context.Provider>
+      ))}
     </PokemonListStyle>
   );
 }
@@ -243,8 +252,10 @@ function Dex() {
 
   return (
     <>
-      <Dashboard myPokemon={myPokemon} setMyPokemon={setMyPokemon} />
-      <PokemonList allPokemon={allPokemon} setMyPokemon={setMyPokemon} />
+      <Context.Provider value={{allPokemon, myPokemon, setMyPokemon}}>
+        <Dashboard />
+        <PokemonList />
+      </Context.Provider>
     </>
   );
 }

@@ -43,7 +43,6 @@ function BannerBtn() {
 }
 
 function Home() {
-
   return (
     <>
       <BannerWrapperStyle>
