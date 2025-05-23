@@ -8,6 +8,7 @@ import Home from './pages/Home.jsx'
 import Dex from './pages/Dex.jsx'
 import Detail from './pages/Detail.jsx'
 
+// alert이 두번뜨는 이유는 StrictMode떄문임 나중에 지우자
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <GlobalStyle/>
