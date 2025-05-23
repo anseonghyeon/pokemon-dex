@@ -15,4 +15,12 @@
 6. 스타일은 styled-components로만 스타일링하기
 
 ## 완성본
+**시연영상**
+<br>
+
 [![시연 영상](https://img.youtube.com/vi/Hk1bGV3AqpI/0.jpg)](https://youtu.be/Hk1bGV3AqpI)
+<br>
+
+**배포된 링크**
+<br>
+https://pokemon-dex-xi.vercel.app/
