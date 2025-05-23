@@ -66,7 +66,7 @@ function Detail() {
   const navigate = useNavigate();
 
   const onClickHandler = () => {
-    navigate('/dex', { state: { pokemon: data.pokemon }});
+    navigate('/dex', { state: { pokemon: pokemon }});
   }
 
   return (
